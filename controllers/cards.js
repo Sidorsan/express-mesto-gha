@@ -45,7 +45,12 @@ module.exports.likeCard = (req, res) => {
       }
       res.status(200).send(card);
     })
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: "Произошла ошибка" });
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -61,5 +66,10 @@ module.exports.dislikeCard = (req, res) => {
       }
       res.status(200).send(card);
     })
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return res.status(400).send({ message: err.message });
+      }
+      res.status(500).send({ message: "Произошла ошибка" });
+    });
 };
