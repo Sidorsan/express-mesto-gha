@@ -1,22 +1,21 @@
 const express = require("express");
 const app = express();
-app.get("/", (req, res) => {
-  res.status(200);
-  res.send("hello world");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const router = require("./routes");
+const loggerMiddlewares = require("./middlewares/logger");
+
+app.use(loggerMiddlewares);
+app.use(bodyParser.json());
+app.use(router);
+
+
+mongoose.connect("mongodb://localhost:27017/mestodb", {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
 });
-app.listen(3005, () => {
+
+app.listen(3000, () => {
   console.log("Load");
 });
-
-// const http = require ('http');
-// const server = http.createServer((req, res) => {
-//   res.statusCode = 200;
-//   res.statusMessage = 'OK';
-//   res.setHeader = ('Content-Type', 'text/plain');
-//   res.write = ('kmkpmkp');
-//   res.end();
-
-// })
-
-// server.listen(3005, '127.0.0.1', console.log('Сервер запущен')
-// )
