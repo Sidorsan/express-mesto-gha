@@ -35,7 +35,11 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about, avatar })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about, avatar },
+    ({ new: true, runValidators: true }),
+  )
     .then((user) => {
       if (!user) {
         res
