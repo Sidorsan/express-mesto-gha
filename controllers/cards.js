@@ -2,7 +2,7 @@ const Card = require('../models/card');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send(cards))
+    .then((cards) => res.status(201).send(cards))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 module.exports.createCard = (req, res) => {
@@ -28,7 +28,12 @@ module.exports.deleteCard = (req, res) => {
       }
       res.status(200).send(card);
     })
-    .catch(() => res.status(400).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Некорректный ID' });
+      }
+      return res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -45,10 +50,10 @@ module.exports.likeCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: err.message });
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Некорректный ID' });
       }
-      return res.status(400).send({ message: 'Произошла ошибка' });
+      return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -66,9 +71,9 @@ module.exports.dislikeCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: err.message });
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'Некорректный ID' });
       }
-      return res.status(400).send({ message: 'Произошла ошибка' });
+      return res.status(500).send({ message: 'Произошла ошибка' });
     });
 };
