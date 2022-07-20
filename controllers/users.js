@@ -1,51 +1,39 @@
 const User = require('../models/user');
 
-const checkUserId = (user, res) => {
-  if (!user) {
-    res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
-    return;
-  }
-  res.status(200).send(user);
-};
-
-const defaultError = (res) => {
-  res.status(500).send({ message: 'Произошла ошибка' });
-};
-
-const validationAndDefaultErrors = (err, res) => {
-  if (err.name === 'ValidationError') {
-    return res.status(400).send({ message: err.message });
-  }
-  return res.status(500).send({ message: 'Произошла ошибка' });
-};
-
-const castAndDefaultErrors = (err, res) => {
-  if (err.name === 'CastError') {
-    return res.status(400).send({ message: 'Некорректный ID' });
-  }
-  return res.status(500).send({ message: 'Произошла ошибка' });
-};
-
-const validationAndCastAndDefaultErrors = (err, res) => {
-  if (err.name === 'ValidationError') {
-    return res.status(400).send({ message: err.message });
-  }
-  if (err.name === 'CastError') {
-    return res.status(400).send({ message: 'Некорректный ID' });
-  }
-  return res.status(500).send({ message: 'Произошла ошибка' });
-};
+const {
+  SERVER_ERROR_CODE,
+  VALIDATION_ERROR_CODE,
+  CAST_ERROR_CODE,
+  NOT_FOUND_ERROR_CODE,
+} = require('../errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() => defaultError(res));
+    .catch(() => {
+      res.status(SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.id)
-    .then((user) => checkUserId(user, res))
-    .catch((err) => castAndDefaultErrors(err, res));
+    .then((user) => {
+      if (!user) {
+        res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -53,7 +41,14 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.status(201).send(user))
-    .catch((err) => validationAndDefaultErrors(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.updateUser = (req, res) => {
@@ -63,8 +58,26 @@ module.exports.updateUser = (req, res) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .then((user) => checkUserId(user, res))
-    .catch((err) => validationAndCastAndDefaultErrors(err, res));
+    .then((user) => {
+      if (!user) {
+        res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
+      }
+      if (err.name === 'CastError') {
+        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
@@ -74,6 +87,24 @@ module.exports.updateUserAvatar = (req, res) => {
     { avatar },
     { new: true, runValidators: true },
   )
-    .then((user) => checkUserId(user, res))
-    .catch((err) => validationAndCastAndDefaultErrors(err, res));
+    .then((user) => {
+      if (!user) {
+        res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
+      }
+      if (err.name === 'CastError') {
+        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Произошла ошибка' });
+    });
 };
