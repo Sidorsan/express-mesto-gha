@@ -1,12 +1,16 @@
 const User = require('../models/user');
-
+const bcrypt = require('bcrypt');
 const {
   SERVER_ERROR_CODE,
   VALIDATION_ERROR_CODE,
   CAST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
+  CONFLICT_ERROR_CODE,
+  FORBIDDEN_ERROR_CODE,
+  UNAUTHORIZED_ERROR_CODE,
 } = require('../errors');
-
+const user = require('../models/user');
+const SALT_ROUNDS = 10;
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
@@ -38,20 +42,34 @@ module.exports.getUser = (req, res) => {
 
 module.exports.createUser = (req, res) => {
   const { email, password, name, about, avatar } = req.body;
-if (!email || !password) {
-  return   res.status(VALIDATION_ERROR_CODE).send({ "message": "Email или Password не переданы" });
-}
+  if (!email || !password) {
+    return res
+      .status(VALIDATION_ERROR_CODE)
+      .send({ message: 'Email или Password не переданы' });
+  }
 
-  User.create({ email, password, name, about, avatar })
-    .then((user) => res.status(201).send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
-      }
+  User.findOne({ email }).then((user) => {
+    if (user) {
       return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: 'Произошла ошибка' });
+        .status(CONFLICT_ERROR_CODE)
+        .send({ message: 'Такой пользователь уже существует' });
+    }
+
+    bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
+      User.create({ email, password: hash, name, about, avatar })
+        .then((user) => res.status(201).send(user))
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            return res
+              .status(VALIDATION_ERROR_CODE)
+              .send({ message: err.message });
+          }
+          return res
+            .status(SERVER_ERROR_CODE)
+            .send({ message: 'Произошла ошибка' });
+        });
     });
+  });
 };
 
 module.exports.updateUser = (req, res) => {
@@ -106,6 +124,36 @@ module.exports.updateUserAvatar = (req, res) => {
       if (err.name === 'CastError') {
         return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Произошла ошибка' });
+    });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(VALIDATION_ERROR_CODE)
+      .send({ message: 'Email или Password не переданы' });
+  }
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return res
+          .status(FORBIDDEN_ERROR_CODE)
+          .send({ message: 'Такой пользователь уже существует' });
+      }
+      bcrypt.compare(password, user.password, (err, isValidPassword) => {
+        if (!isValidPassword) {
+          return res
+            .status(UNAUTHORIZED_ERROR_CODE)
+            .send({ message: 'Пароль не верный' });
+        }
+        return res.status(200).send({ user: user.email });
+      });
+    })
+    .catch(() => {
       return res
         .status(SERVER_ERROR_CODE)
         .send({ message: 'Произошла ошибка' });
