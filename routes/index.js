@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const userRouter = require('./users');
 const cardRouter = require('./cards');
+const jwt = require('jsonwebtoken')
 const { NOT_FOUND_ERROR_CODE } = require('../errors');
 
 router.use(userRouter);

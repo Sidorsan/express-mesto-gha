@@ -139,10 +139,10 @@ module.exports.login = (req, res) => {
   }
   User.findOne({ email })
     .then((user) => {
-      if (user) {
+      if (!user) {
         return res
           .status(FORBIDDEN_ERROR_CODE)
-          .send({ message: 'Такой пользователь уже существует' });
+          .send({ message: 'Такого пользователя не существует' });
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
@@ -150,7 +150,7 @@ module.exports.login = (req, res) => {
             .status(UNAUTHORIZED_ERROR_CODE)
             .send({ message: 'Пароль не верный' });
         }
-        return res.status(200).send({ user: user.email });
+        return res.status(200).send({ user: user._id });
       });
     })
     .catch(() => {
