@@ -1,5 +1,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const { getJwtToken } = require('../middlewares/auth');
+const { isAuthorised } = require('../middlewares/auth');
+
 const {
   SERVER_ERROR_CODE,
   VALIDATION_ERROR_CODE,
@@ -12,7 +15,12 @@ const {
 const user = require('../models/user');
 const SALT_ROUNDS = 10;
 module.exports.getUsers = (req, res) => {
-  User.find({})
+  // if (!isAuthorised(req.headers.authorizationn)) {
+  //   return res
+  //     .status(UNAUTHORIZED_ERROR_CODE)
+  //     .send({ message: 'Недостаточно прав' });
+  // }
+  return User.find({})
     .then((users) => res.send(users))
     .catch(() => {
       res.status(SERVER_ERROR_CODE).send({ message: 'Произошла ошибка' });
@@ -150,7 +158,10 @@ module.exports.login = (req, res) => {
             .status(UNAUTHORIZED_ERROR_CODE)
             .send({ message: 'Пароль не верный' });
         }
-        return res.status(200).send({ user: user._id });
+
+        const token = getJwtToken(User.id);
+
+        return res.status(200).send({ token });
       });
     })
     .catch(() => {
