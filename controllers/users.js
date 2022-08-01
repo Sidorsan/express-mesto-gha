@@ -12,7 +12,7 @@ const {
   FORBIDDEN_ERROR_CODE,
   UNAUTHORIZED_ERROR_CODE,
 } = require('../errors');
-const user = require('../models/user');
+// const user = require('../models/user');
 const SALT_ROUNDS = 10;
 module.exports.getUsers = (req, res) => {
   // if (!isAuthorised(req.headers.authorizationn)) {

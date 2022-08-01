@@ -6,12 +6,12 @@ const mongoose = require('mongoose');
 const router = require('./routes');
 
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62d22caba78b332d70b5cc6d',
-  };
-  next();
-});
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '62d22caba78b332d70b5cc6d',
+//   };
+//   next();
+// });
 
 app.use(bodyParser.json());
 app.use(router);
