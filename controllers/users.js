@@ -12,6 +12,7 @@ const {
   FORBIDDEN_ERROR_CODE,
   UNAUTHORIZED_ERROR_CODE,
 } = require('../errors');
+const { log } = require('console');
 // const user = require('../models/user');
 const SALT_ROUNDS = 10;
 module.exports.getUsers = (req, res) => {
@@ -41,6 +42,30 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Произошла ошибка' });
+    });
+};
+
+
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+.then(() => {console.log(req.user._id)})
+    .then((user) => {
+
+      if (!user) {
+        res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: 'Запрашиваемый пользователь не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID1' });
       }
       return res
         .status(SERVER_ERROR_CODE)
@@ -159,9 +184,9 @@ module.exports.login = (req, res) => {
             .send({ message: 'Пароль не верный' });
         }
 
-        const token = getJwtToken(User.id);
-
-        return res.status(200).send({ token });
+        const token = getJwtToken(user);
+console.log(user._id);
+        return res.status(200).send( user._id );
       });
     })
     .catch(() => {

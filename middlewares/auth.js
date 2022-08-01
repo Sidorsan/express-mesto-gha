@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'secret';
 const User = require('../models/user');
 
-module.exports.getJwtToken = (id) => {
-  return jwt.sign({id}, JWT_SECRET);
+module.exports.getJwtToken = (user) => {
+  return jwt.sign({ _id: user._id }, JWT_SECRET,  { expiresIn: '7d'});
 };
 
 // module.exports.isAuthorised = (token) => {
@@ -37,6 +37,7 @@ module.exports.auth = (req, res, next) => {
   }
 
   req.user = payload;
+
   next();
 };
 
