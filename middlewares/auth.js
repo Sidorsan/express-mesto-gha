@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'secret';
-const User = require('../models/user');
+// const JWT_SECRET = 'secret';
+// const User = require('../models/user');
 
-module.exports.getJwtToken = (user) => {
-  return jwt.sign({ _id: user._id }, JWT_SECRET,  { expiresIn: '7d'});
-};
+// module.exports.getJwtToken = (user) => {
+//   return jwt.sign({ _id: user._id }, 'some-secret-key',  { expiresIn: '7d'});
+// };
 
 // module.exports.isAuthorised = (token) => {
 //   return jwt.verify(token, JWT_SECRET, (err, decoded) => {
@@ -16,7 +16,7 @@ module.exports.getJwtToken = (user) => {
 //   })
 // }
 
-module.exports.auth = (req, res, next) => {
+module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -29,7 +29,7 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
     return res
       .status(401)

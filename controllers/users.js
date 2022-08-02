@@ -2,7 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const { getJwtToken } = require('../middlewares/auth');
 const { isAuthorised } = require('../middlewares/auth');
-
+const jwt = require('jsonwebtoken');
 const {
   SERVER_ERROR_CODE,
   VALIDATION_ERROR_CODE,
@@ -49,12 +49,10 @@ module.exports.getUser = (req, res) => {
     });
 };
 
-
 module.exports.getCurrentUser = (req, res) => {
   User.findById(req.user._id)
-.then(() => {console.log(req.user._id)})
-    .then((user) => {
 
+    .then((user) => {
       if (!user) {
         res
           .status(NOT_FOUND_ERROR_CODE)
@@ -65,7 +63,7 @@ module.exports.getCurrentUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID1' });
+        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       return res
         .status(SERVER_ERROR_CODE)
@@ -171,6 +169,7 @@ module.exports.login = (req, res) => {
       .send({ message: 'Email или Password не переданы' });
   }
   User.findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) {
         return res
@@ -184,9 +183,10 @@ module.exports.login = (req, res) => {
             .send({ message: 'Пароль не верный' });
         }
 
-        const token = getJwtToken(user);
-console.log(user._id);
-        return res.status(200).send( user._id );
+        const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+          expiresIn: '7d',
+        });
+        return res.status(200).send(token);
       });
     })
     .catch(() => {

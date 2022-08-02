@@ -5,6 +5,7 @@ const {
   VALIDATION_ERROR_CODE,
   CAST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
+  FORBIDDEN_ERROR_CODE
 } = require('../errors');
 
 module.exports.getCards = (req, res) => {
@@ -31,15 +32,26 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+
+  Card.findById(req.params.id)
     .then((card) => {
+      // console.log(card.owner);
+      // console.log(req.user._id);
       if (!card) {
-        res
+        return res
           .status(NOT_FOUND_ERROR_CODE)
           .send({ message: 'Карточка не найдена' });
-        return;
       }
-      res.status(200).send(card);
+      if (req.user._id != card.owner) {
+        console.log(req.user._id);
+        console.log(card.owner);
+        return res
+          .status(FORBIDDEN_ERROR_CODE)
+          .send({ message: 'Нельзя удалить карточку другого пользователя' });
+      }
+      return Card.deleteOne(card)
+      .then(() => res.status(200).send( card ));
+      // res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -55,7 +67,7 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
@@ -80,7 +92,7 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
