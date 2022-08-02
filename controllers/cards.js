@@ -35,16 +35,14 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findById(req.params.id)
     .then((card) => {
-      // console.log(card.owner);
-      // console.log(req.user._id);
+
       if (!card) {
         return res
           .status(NOT_FOUND_ERROR_CODE)
           .send({ message: 'Карточка не найдена' });
       }
       if (req.user._id != card.owner) {
-        console.log(req.user._id);
-        console.log(card.owner);
+
         return res
           .status(FORBIDDEN_ERROR_CODE)
           .send({ message: 'Нельзя удалить карточку другого пользователя' });
