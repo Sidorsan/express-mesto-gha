@@ -96,7 +96,7 @@ module.exports.createUser = (req, res, next) => {
 
   User.findOne({ email }).then((user) => {
     if (user) {
-      console.log(user);
+
       throw new ConflictErrorCode('Такой пользователь уже существует');
       // return res
       //   .status(CONFLICT_ERROR_CODE)
@@ -202,7 +202,7 @@ module.exports.login = (req, res, next) => {
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
-          console.log("sdcfwec");
+
           throw new UnauthorizedErrorCode('Пароль не верный');
           // return res
           //   .status(UNAUTHORIZED_ERROR_CODE)
