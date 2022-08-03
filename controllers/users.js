@@ -88,37 +88,33 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
   if (!email || !password) {
-    throw new ValidationErrorCode('Email или Password не переданы');
-    // return res
-    //   .status(VALIDATION_ERROR_CODE)
-    //   .send({ message: 'Email или Password не переданы' });
+    // throw new ValidationErrorCode('Email или Password не переданы');
   }
+  User.findOne({ email }).then((user) =>{
+  if(user) {
+    next (new ConflictErrorCode('Такой пользователь уже существует'))
+  } })
+  // User.findOne({ email }).then((user) => {
+    // if (user) {
 
-  User.findOne({ email }).then((user) => {
-    if (user) {
-
-      throw new ConflictErrorCode('Такой пользователь уже существует');
-      // return res
-      //   .status(CONFLICT_ERROR_CODE)
-      //   .send({ message: 'Такой пользователь уже существует' });
-    }
+      // throw new ConflictErrorCode('Такой пользователь уже существует');
+    // }
 
     bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
       User.create({ email, password: hash, name, about, avatar })
         .then((user) => res.status(201).send(user))
-        // .catch((err) => {
-        //   if (err.name === 'ValidationError') {
-        //     return res
-        //       .status(VALIDATION_ERROR_CODE)
-        //       .send({ message: err.message });
-        //   }
-        //   return res
-        //     .status(SERVER_ERROR_CODE)
-        //     .send({ message: 'Произошла ошибка' });
-        // });
-        .catch(next);
+        .catch((error) => {
+          if (error.name === 'ValidationError') {
+            next(new ValidationErrorCode('Переданы неккоректные данные'));
+            return;
+          }
+          if (error.code === 11000) {
+            next(new ConflictErrorCode('Пользователь с таким email уже создан'));
+            return;
+          }
+        });
     });
-  });
+  // });
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -131,10 +127,10 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => {
       // if (!user) {
       //   throw new NotFoundError('Запрашиваемый пользователь не найден');
-        // res
-        //   .status(NOT_FOUND_ERROR_CODE)
-        //   .send({ message: 'Запрашиваемый пользователь не найден' });
-        // return;
+      // res
+      //   .status(NOT_FOUND_ERROR_CODE)
+      //   .send({ message: 'Запрашиваемый пользователь не найден' });
+      // return;
       // }
       res.status(200).send(user);
     })
@@ -162,10 +158,10 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then((user) => {
       // if (!user) {
       //   throw new NotFoundError('Запрашиваемый пользователь не найден');
-        // res
-        //   .status(NOT_FOUND_ERROR_CODE)
-        //   .send({ message: 'Запрашиваемый пользователь не найден' });
-        // return;
+      // res
+      //   .status(NOT_FOUND_ERROR_CODE)
+      //   .send({ message: 'Запрашиваемый пользователь не найден' });
+      // return;
       // }
       res.status(200).send(user);
     })
@@ -202,7 +198,6 @@ module.exports.login = (req, res, next) => {
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
-
           throw new UnauthorizedErrorCode('Пароль не верный');
           // return res
           //   .status(UNAUTHORIZED_ERROR_CODE)
@@ -220,5 +215,5 @@ module.exports.login = (req, res, next) => {
     //     .status(SERVER_ERROR_CODE)
     //     .send({ message: 'Произошла ошибка' });
     // });
-    .catch(next)
+    .catch(next);
 };

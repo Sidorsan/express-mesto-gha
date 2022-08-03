@@ -17,9 +17,9 @@ app.use((err, req, res, next) => {
   if (err.name === 'CastError') {
     return res.status(400).send({ message: 'Некорректный ID' });
   }
-//   if (err.code === 11000) {
-//     return res.status(409).send({ message: 'Такой пользователь уже существует' }); // Обработка ошибки
-// }
+  if (err.code === 11000) {
+    return res.status(409).send({ message: 'Такой пользователь уже существует' }); // Обработка ошибки
+}
 if (err.name === 'ValidationError') {
   return res.status(400).send({ message: err.message });
 }
