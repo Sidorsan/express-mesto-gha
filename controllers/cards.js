@@ -1,11 +1,13 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors');
+const ForbiddenErrorCode = require('../errors');
 
 const {
   SERVER_ERROR_CODE,
   VALIDATION_ERROR_CODE,
   CAST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
-  FORBIDDEN_ERROR_CODE
+  FORBIDDEN_ERROR_CODE,
 } = require('../errors');
 
 module.exports.getCards = (req, res) => {
@@ -31,34 +33,34 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-module.exports.deleteCard = (req, res) => {
-
+module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
     .then((card) => {
-
       if (!card) {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: 'Карточка не найдена' });
+        throw new NotFoundError('Карточка не найдена');
+        // return res
+        //   .status(NOT_FOUND_ERROR_CODE)
+        //   .send({ message: 'Карточка не найдена' });
       }
       if (req.user._id != card.owner) {
-
-        return res
-          .status(FORBIDDEN_ERROR_CODE)
-          .send({ message: 'Нельзя удалить карточку другого пользователя' });
+        throw new ForbiddenErrorCode(
+          'Нельзя удалить карточку другого пользователя'
+        );
+        // return res
+        //   .status(FORBIDDEN_ERROR_CODE)
+        //   .send({ message: 'Нельзя удалить карточку другого пользователя' });
       }
-      return Card.deleteOne(card)
-      .then(() => res.status(200).send( card ));
-      // res.status(200).send(card);
+      return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
-      }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: 'Произошла ошибка' });
-    });
+    // .catch((err) => {
+    //   if (err.name === 'CastError') {
+    //     return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+    //   }
+    //   return res
+    //     .status(SERVER_ERROR_CODE)
+    //     .send({ message: 'Произошла ошибка' });
+    // });
+    .catch(next);
 };
 
 module.exports.likeCard = (req, res) => {

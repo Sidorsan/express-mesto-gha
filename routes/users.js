@@ -14,7 +14,6 @@ const {
 router.use(auth);
 
 router.get('/users', getUsers);
-
 router.patch('/users/me', updateUser);
 router.patch('/users/me/avatar', updateUserAvatar);
 router.get('/users/me', getCurrentUser);
