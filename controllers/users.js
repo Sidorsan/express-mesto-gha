@@ -4,7 +4,7 @@ const { getJwtToken } = require('../middlewares/auth');
 const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors');
-const ValidationErrorCode = require('../errors');
+const ValidationErrorCode = require('../Errors/ValidationErrorCode');
 const ConflictErrorCode = require('../errors');
 const ForbiddenErrorCode = require('../errors');
 // const UnauthorizedErrorCode = require('../errors');
@@ -189,6 +189,8 @@ module.exports.updateUserAvatar = (req, res, next) => {
     // });
     .catch(next);
 };
+
+
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;

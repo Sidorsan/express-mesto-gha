@@ -7,6 +7,7 @@ module.exports.CONFLICT_ERROR_CODE = 409;//
 module.exports.FORBIDDEN_ERROR_CODE = 403;//
 module.exports.UNAUTHORIZED_ERROR_CODE = 401;//
 
+
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
@@ -15,13 +16,13 @@ class NotFoundError extends Error {
 }
 module.exports = NotFoundError;
 
-class ValidationErrorCode extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 400;
-  }
-}
-module.exports = ValidationErrorCode;
+// class ValidationErrorCode extends Error {
+//   constructor(message) {
+//     super(message);
+//     this.statusCode = 400;
+//   }
+// }
+// module.exports = ValidationErrorCode;
 
 class ForbiddenErrorCode extends Error {
   constructor(message) {
@@ -31,7 +32,7 @@ class ForbiddenErrorCode extends Error {
 }
 module.exports = ForbiddenErrorCode;
 
-class ConflictErrorCode extends Error {
+ class ConflictErrorCode extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 409;
