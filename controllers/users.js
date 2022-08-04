@@ -87,13 +87,18 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
-  if (!email || !password) {
-    // throw new ValidationErrorCode('Email или Password не переданы');
-  }
-  User.findOne({ email }).then((user) =>{
-  if(user) {
-    next (new ConflictErrorCode('Такой пользователь уже существует'))
-  } })
+  // if (!email || !password) {
+
+  //   // next (new ValidationErrorCode('Email или Password не переданы'))
+  //   // throw new ValidationErrorCode('Email или Password не переданы');
+  // }
+  // User.findOne({ email }).then((user) =>{
+  // if(user) {
+
+  //   // next (new ConflictErrorCode('Такой пользователь уже существует'))
+  //   // throw new ConflictErrorCode('Такой пользователь уже существует');
+
+  // } })
   // User.findOne({ email }).then((user) => {
     // if (user) {
 
@@ -106,13 +111,14 @@ module.exports.createUser = (req, res, next) => {
         .catch((error) => {
           if (error.name === 'ValidationError') {
             next(new ValidationErrorCode('Переданы неккоректные данные'));
-            return;
+            return
           }
           if (error.code === 11000) {
             next(new ConflictErrorCode('Пользователь с таким email уже создан'));
-            return;
+            return
           }
         });
+        // .catch(next)
     });
   // });
 };
