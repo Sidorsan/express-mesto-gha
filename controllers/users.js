@@ -7,7 +7,7 @@ const NotFoundError = require('../errors');
 const ValidationErrorCode = require('../errors');
 const ConflictErrorCode = require('../errors');
 const ForbiddenErrorCode = require('../errors');
-const UnauthorizedErrorCode = require('../errors');
+// const UnauthorizedErrorCode = require('../errors');
 
 const {
   SERVER_ERROR_CODE,
@@ -87,40 +87,45 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
-  // if (!email || !password) {
+  // bcrypt
+  //   .hash(password, SALT_ROUNDS)
+  //   .then((hash) => {
+  //     User.create({ email, password: hash, name, about, avatar }).then(
+  //       (user) => {
+  //         res.status(201).send(user);
+  //       }
+  //     );
+  //   })
+  if (!email || !password) {
+    throw new ValidationErrorCode('Переданы неккоректные данные');
+  }
+    User.findOne({ email })
+      .then((user) => {
 
-  //   // next (new ValidationErrorCode('Email или Password не переданы'))
-  //   // throw new ValidationErrorCode('Email или Password не переданы');
-  // }
-  // User.findOne({ email }).then((user) =>{
-  // if(user) {
-
-  //   // next (new ConflictErrorCode('Такой пользователь уже существует'))
-  //   // throw new ConflictErrorCode('Такой пользователь уже существует');
-
-  // } })
-  // User.findOne({ email }).then((user) => {
-    // if (user) {
-
-      // throw new ConflictErrorCode('Такой пользователь уже существует');
-    // }
-
-    bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
-      User.create({ email, password: hash, name, about, avatar })
-        .then((user) => res.status(201).send(user))
-        .catch((error) => {
-          if (error.name === 'ValidationError') {
-            next(new ValidationErrorCode('Переданы неккоректные данные'));
-            return
-          }
-          if (error.code === 11000) {
-            next(new ConflictErrorCode('Пользователь с таким email уже создан'));
-            return
-          }
-        });
-        // .catch(next)
+        if (user) {
+          throw new ConflictErrorCode('Такой пользователь уже существует');
+        } else {
+          bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
+            User.create({ email, password: hash, name, about, avatar }).then(
+              (user) => {
+                res.status(201).send(user);
+              }
+            );
+          });
+        }
+      })
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictErrorCode('Пользователь с таким email уже создан'));
+      }
+      if (err.name === 'ValidationError') {
+        next(new ValidationErrorCode('Переданы неккоректные данные'));
+      }
+      next(err);
+    })
+    .catch((err) => {
+      next(err);
     });
-  // });
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -204,10 +209,10 @@ module.exports.login = (req, res, next) => {
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
-          throw new UnauthorizedErrorCode('Пароль не верный');
-          // return res
-          //   .status(UNAUTHORIZED_ERROR_CODE)
-          //   .send({ message: 'Пароль не верный' });
+          // throw new UnauthorizedErrorCode('Пароль не верный');
+          return res
+            .status(UNAUTHORIZED_ERROR_CODE)
+            .send({ message: 'Пароль не верный' });
         }
 
         const token = jwt.sign({ _id: user._id }, 'some-secret-key', {

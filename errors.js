@@ -39,10 +39,10 @@ class ConflictErrorCode extends Error {
 }
 module.exports = ConflictErrorCode;
 
-class UnauthorizedErrorCode extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 401;
-  }
-}
-module.exports = UnauthorizedErrorCode
+// class UnauthorizedErrorCode extends Error {
+//   constructor(message) {
+//     super(message);
+//     this.statusCode = 401;
+//   }
+// }
+// module.exports = UnauthorizedErrorCode
