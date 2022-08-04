@@ -87,38 +87,32 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
-  // if (!email || !password) {
+  if (!email || !password) {
 
-  //   // next (new ValidationErrorCode('Email или Password не переданы'))
-  //   // throw new ValidationErrorCode('Email или Password не переданы');
-  // }
-  // User.findOne({ email }).then((user) =>{
-  // if(user) {
+    // next (new ValidationErrorCode('Email или Password не переданы'))
+    throw new ValidationErrorCode('Email или Password не переданы');
+  }
+  User.findOne({ email }).then((user) =>{
+  if(user) {
 
-  //   // next (new ConflictErrorCode('Такой пользователь уже существует'))
-  //   // throw new ConflictErrorCode('Такой пользователь уже существует');
+    // next (new ConflictErrorCode('Такой пользователь уже существует'))
+    throw new ConflictErrorCode('Такой пользователь уже существует');
 
-  // } })
-  // User.findOne({ email }).then((user) => {
-    // if (user) {
-
-      // throw new ConflictErrorCode('Такой пользователь уже существует');
-    // }
-
-    bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
+  } })
+     bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
       User.create({ email, password: hash, name, about, avatar })
         .then((user) => res.status(201).send(user))
-        .catch((error) => {
-          if (error.name === 'ValidationError') {
-            next(new ValidationErrorCode('Переданы неккоректные данные'));
-            return
-          }
-          if (error.code === 11000) {
-            next(new ConflictErrorCode('Пользователь с таким email уже создан'));
-            return
-          }
-        });
-        // .catch(next)
+        // .catch((error) => {
+        //   if (error.name === 'ValidationError') {
+        //     next(new ValidationErrorCode('Переданы неккоректные данные'));
+        //     return
+        //   }
+        //   if (error.code === 11000) {
+        //     next(new ConflictErrorCode('Пользователь с таким email уже создан'));
+        //     return
+        //   }
+        // });
+        .catch(next)
     });
   // });
 };
