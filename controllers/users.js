@@ -4,10 +4,12 @@ const { getJwtToken } = require('../middlewares/auth');
 const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors');
-const ValidationErrorCode = require('../Errors/ValidationErrorCode');
+// const ValidationErrorCode = require('../Errors/ValidationErrorCode');
+const ValidationErrorCode = require('../errors');
 const ConflictErrorCode = require('../errors');
 const ForbiddenErrorCode = require('../errors');
 // const UnauthorizedErrorCode = require('../errors');
+console.log(ValidationErrorCode);
 
 const {
   SERVER_ERROR_CODE,
@@ -84,6 +86,51 @@ module.exports.getCurrentUser = (req, res, next) => {
     // });
     .catch(next);
 };
+
+// module.exports.createUser = (req, res, next) => {
+//   const {
+//     email,
+//     password,
+//     name,
+//     about,
+//     avatar,
+//   } = req.body;
+//   User.findOne({ email }).then((user) => {
+//     if (user) {
+//       throw new ConflictError(‘Пользователь с таким email уже зарегистрирован’);
+//     } else {
+//       bcrypt.hash(password, 10)
+//         .then((hash) => User.create({
+//           email,
+//           password: hash,
+//           name,
+//           about,
+//           avatar,
+//         }))
+//         .then((userData) => res.status(201).send({
+//           email: userData.email,
+//           id: userData._id,
+//           name: userData.name,
+//           about: userData.about,
+//           avatar: userData.avatar,
+//         }))
+//         .catch((err) => {
+//           if (err.name === ‘ValidationError’) {
+//             next(new CastError(‘Введены некорректные данные‘));
+//           }
+//           if (err.code === 11000) {
+//             next(new ConflictError(‘Такой Email уже существует’));
+//           }
+//           next(err);
+//         });
+//     }
+//   }).catch((err) => {
+//     next(err);
+//   });
+// };
+
+
+
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;

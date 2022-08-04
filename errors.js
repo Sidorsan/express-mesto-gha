@@ -16,13 +16,13 @@ class NotFoundError extends Error {
 }
 module.exports = NotFoundError;
 
-// class ValidationErrorCode extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.statusCode = 400;
-//   }
-// }
-// module.exports = ValidationErrorCode;
+class ValidationErrorCode extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
+module.exports = ValidationErrorCode;
 
 class ForbiddenErrorCode extends Error {
   constructor(message) {
