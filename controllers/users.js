@@ -1,8 +1,8 @@
-const express = require('express');
+// const express = require('express');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
-const { getJwtToken } = require('../middlewares/auth');
-const { isAuthorised } = require('../middlewares/auth');
+// const { getJwtToken } = require('../middlewares/auth');
+// const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
 const CastErrorCode = require('../errors/CastErrorCode');
 const ConflictErrorCode = require('../errors/ConflictErrorCode');
@@ -10,16 +10,16 @@ const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
 const ValidationErrorCode = require('../errors/ValidationErrorCode');
-const {
-  SERVER_ERROR_CODE,
-  VALIDATION_ERROR_CODE,
-  CAST_ERROR_CODE,
-  NOT_FOUND_ERROR_CODE,
-  CONFLICT_ERROR_CODE,
-  FORBIDDEN_ERROR_CODE,
-  UNAUTHORIZED_ERROR_CODE,
-} = require('../errors/errors');
-const { log } = require('console');
+// const {
+//   SERVER_ERROR_CODE,
+//   VALIDATION_ERROR_CODE,
+//   CAST_ERROR_CODE,
+//   NOT_FOUND_ERROR_CODE,
+//   CONFLICT_ERROR_CODE,
+//   FORBIDDEN_ERROR_CODE,
+//   UNAUTHORIZED_ERROR_CODE,
+// } = require('../errors/errors');
+// const { log } = require('console');
 // const user = require('../models/user');
 const SALT_ROUNDS = 10;
 
@@ -54,7 +54,9 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+        next(new CastErrorCode('Некорректный ID'));
+        return;
+        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
       //   return res
@@ -80,7 +82,9 @@ module.exports.getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+        next(new CastErrorCode('Некорректный ID'));
+        return;
+        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
       //   return res
@@ -92,7 +96,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
   if (!email || !password) {
-    next(new ValidationErrorCode('Email или Password не переданы'));
+    next(new ValidationErrorCode(err.message));
     return;
   }
   User.findOne({ email }).then((user) => {
@@ -128,10 +132,14 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
+        next(new ValidationErrorCode(err.message));
+        return;
+        // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
       }
       if (err.name === 'CastError') {
-        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+        next(new CastErrorCode('Некорректный ID'));
+        return;
+        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
     });
@@ -158,10 +166,14 @@ module.exports.updateUserAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
+        next(new ValidationErrorCode(err.message));
+        return;
+        // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
       }
       if (err.name === 'CastError') {
-        return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+        next(new CastErrorCode('Некорректный ID'));
+        return;
+        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
     });
@@ -170,7 +182,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next(new ValidationErrorCode('Email или Password не переданы'));
+    next(new ValidationErrorCode(err.message));
     return;
     // return res
     //   .status(VALIDATION_ERROR_CODE)

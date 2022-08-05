@@ -3,5 +3,6 @@ module.exports = class ValidationErrorCode extends Error {
   constructor(message) {
     super(message);
     this.statusCode = VALIDATION_ERROR_CODE;
+
   }
 }
