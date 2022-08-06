@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+
+const regex = new RegExp(/^(https||http):\/\//)
 const userSchema = new mongoose.Schema(
   {
     email: {
