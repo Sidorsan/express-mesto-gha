@@ -70,27 +70,27 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
 
     .then((user) => {
-      if (!user) {
-        next(new NotFoundError('Нет пользователя с таким id'));
-        return;
-        // res
-        //   .status(NOT_FOUND_ERROR_CODE)
-        //   .send({ message: 'Запрашиваемый пользователь не найден' });
-        // return;
-      }
+      // if (!user) {
+      //   next(new NotFoundError('Нет пользователя с таким id'));
+      //   return;
+      //   // res
+      //   //   .status(NOT_FOUND_ERROR_CODE)
+      //   //   .send({ message: 'Запрашиваемый пользователь не найден' });
+      //   // return;
+      // }
       res.status(200).send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new CastErrorCode('Некорректный ID'));
-        return;
-        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
-      }
-      next();
-      //   return res
-      //     .status(SERVER_ERROR_CODE)
-      //     .send({ message: 'Произошла ошибка' });
-    });
+    }).catch(next)
+    // .catch((err) => {
+    //   if (err.name === 'CastError') {
+    //     next(new CastErrorCode('Некорректный ID'));
+    //     return;
+    //     // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
+    //   }
+    //   next();
+    //   //   return res
+    //   //     .status(SERVER_ERROR_CODE)
+    //   //     .send({ message: 'Произошла ошибка' });
+    // });
 };
 
 module.exports.createUser = (req, res, next) => {
