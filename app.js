@@ -5,12 +5,12 @@ const mongoose = require('mongoose');
 // const router = require('./routes');
 const router = require('express').Router();
 const { errors } = require('celebrate');
-const { createUser, login } = require('./controllers/users');
+const {createUser, login} = require('./controllers/users');
 // const errorHandler = require('./middlewares/errorHandler')
-app.use(router);
+// app.use(router);
 app.use(bodyParser.json());
-app.post('/signup', createUser);
-app.post('/signin', login);
+router.post('/signup', createUser);
+router.post('/signin', login);
 
 app.use(errors());
 app.use((err, req, res, next) => {

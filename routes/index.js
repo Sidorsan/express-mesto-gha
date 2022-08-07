@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const userRouter = require('./users');
 const cardRouter = require('./cards');
-const NotFoundError  = require('../errors/NotFoundError');
+// const NotFoundError  = require('../errors/NotFoundError');
 //  const  {NOT_FOUND_ERROR_CODE}  = require('../errors/errors');
 const NotFoundError  = require('../errors/NotFoundError');
 router.use(userRouter);
