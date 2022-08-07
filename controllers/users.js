@@ -69,23 +69,29 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
+
   const { email, password, name, about, avatar } = req.body;
+
   if (!email || !password) {
+
     next(new ValidationErrorCode(err.message));
     return;
   }
   User.findOne({ email }).then((user) => {
+
     if (user) {
       next(new ConflictErrorCode('Такой пользователь уже существует'));
       return;
     }
   });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
+
     User.create({ email, password: hash, name, about, avatar })
       .then((user) => res.status(201).send(user))
       .catch(() => next);
-  });
+  }).catch(() => next);;
 };
+
 
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;

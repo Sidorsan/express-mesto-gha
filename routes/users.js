@@ -11,12 +11,14 @@ const {
   login,
 } = require('../controllers/users');
 
-router.post('/signup', createUser);
+
 router.post('/signin', login);
+router.post('/signup', createUser);
 
 router.use(auth);
 
 router.get('/users', getUsers);
+
 router.patch(
   '/users/me',
   celebrate({
@@ -27,6 +29,7 @@ router.patch(
   }),
   updateUser
 );
+
 router.patch(
   '/users/me/avatar',
   celebrate({
@@ -36,6 +39,7 @@ router.patch(
   }),
   updateUserAvatar
 );
+
 router.get('/users/me', getCurrentUser);
 
 router.get(
