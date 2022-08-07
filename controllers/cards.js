@@ -1,9 +1,9 @@
 const Card = require('../models/card');
 
-// const sastErrorCode = require('../errors/sastErrorCode');
-const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-const NotFoundError = require('../errors/NotFoundError');
-const ValidationErrorCode = require('../errors/ValidationErrorCode');
+// const CastErrorCode = require('../errors/CastErrorCode');
+// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
+// const NotFoundError = require('../errors/NotFoundError');
+// const ValidationErrorCode = require('../errors/ValidationErrorCode');
 
 // const {
 //   SERVER_ERROR_CODE,
@@ -28,14 +28,10 @@ module.exports.createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         console.log(err.message);
-        next(new ValidationErrorCode(err.message));
-        return;
-        // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
+        // next(new ValidationErrorCode(err.message));
+        // return;
       }
       next();
-      // return res
-      //   .status(SERVER_ERROR_CODE)
-      //   .send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -43,37 +39,23 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
-        return;
-        // throw new NotFoundError('Карточка не найдена');
-        // return res
-        //   .status(NOT_FOUND_ERROR_CODE)
-        //   .send({ message: 'Карточка не найдена' });
+        // next(new NotFoundError('Карточка не найдена'));
+        // return;
       }
       if (req.user._id != card.owner) {
-        next(
-          new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
-        );
-        return;
-        // throw new ForbiddenErrorCode(
-        //   'Нельзя удалить карточку другого пользователя'
+        // next(
+        //   new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
         // );
-        // return res
-        //   .status(FORBIDDEN_ERROR_CODE)
-        //   .send({ message: 'Нельзя удалить карточку другого пользователя' });
+        // return;
       }
       return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // next(new CastErrorCode('Некорректный ID'));
         // return;
-        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
-      // return res
-      //   .status(SERVER_ERROR_CODE)
-      //   .send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -85,25 +67,17 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
-        return;
-        // res
-        //   .status(NOT_FOUND_ERROR_CODE)
-        //   .send({ message: 'Карточка не найдена' });
+        // next(new NotFoundError('Карточка не найдена'));
         // return;
       }
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // next(new CastErrorCode('Некорректный ID'));
         // return;
-        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
-      // return res
-      //   .status(SERVER_ERROR_CODE)
-      //   .send({ message: 'Произошла ошибка' });
     });
 };
 
@@ -115,24 +89,16 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
-        return;
-        // res
-        //   .status(NOT_FOUND_ERROR_CODE)
-        //   .send({ message: 'Карточка не найдена' });
+        // next(new NotFoundError('Карточка не найдена'));
         // return;
       }
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // next(new CastErrorCode('Некорректный ID'));
         // return;
-        // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
-      // return res
-      //   .status(SERVER_ERROR_CODE)
-      //   .send({ message: 'Произошла ошибка' });
     });
 };
