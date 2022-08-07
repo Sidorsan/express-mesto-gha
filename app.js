@@ -1,5 +1,4 @@
 const express = require('express');
-
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -7,13 +6,11 @@ const router = require('./routes');
 const { errors } = require('celebrate');
 const { createUser, login } = require('./controllers/users');
 // const errorHandler = require('./middlewares/errorHandler')
-
 app.use(bodyParser.json());
 app.post('/signup', createUser);
 app.post('/signin', login);
 app.use(router);
 app.use(errors());
-
 app.use((err, req, res, next) => {
 //   // console.log(err.code);
 //   // if (err.name === 'CastError') {
@@ -33,12 +30,11 @@ app.use((err, req, res, next) => {
   next();
 });
 // app.use (errorHandler)
-
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
-  // useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
-app.listen(4000);
+app.listen(3000);
