@@ -1,10 +1,17 @@
 const Card = require('../models/card');
 
-const CastErrorCode = require('../errors/CastErrorCode');
-const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-const NotFoundError = require('../errors/NotFoundError');
-const ValidationErrorCode = require('../errors/ValidationErrorCode');
-
+// const CastErrorCode = require('../errors/CastErrorCode');
+// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
+// const NotFoundError = require('../errors/NotFoundError');
+// const ValidationErrorCode = require('../errors/ValidationErrorCode');
+const {
+  CastErrorCode,
+  ConflictErrorCode,
+  ForbiddenErrorCode,
+  NotFoundError,
+  UnauthorizedErrorCode,
+  ValidationErrorCode,
+} = require('../errors/errors');
 // const {
 //   SERVER_ERROR_CODE,
 //   VALIDATION_ERROR_CODE,

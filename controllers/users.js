@@ -3,12 +3,14 @@ const bcrypt = require('bcrypt');
 // const { getJwtToken } = require('../middlewares/auth');
 // const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
-const CastErrorCode = require('../errors/CastErrorCode');
-const ConflictErrorCode = require('../errors/ConflictErrorCode');
-const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-const NotFoundError = require('../errors/NotFoundError');
-const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
-const ValidationErrorCode = require('../errors/ValidationErrorCode');
+// const CastErrorCode = require('../errors/CastErrorCode');
+// const ConflictErrorCode = require('../errors/ConflictErrorCode');
+// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
+// const NotFoundError = require('../errors/NotFoundError');
+// const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
+// const ValidationErrorCode = require('../errors/ValidationErrorCode');
+
+const {CastErrorCode, ConflictErrorCode, ForbiddenErrorCode, NotFoundError, UnauthorizedErrorCode, ValidationErrorCode} =require('../errors/errors')
 
 // console.log(new CastErrorCode('ewce'));
 // const {
