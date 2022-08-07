@@ -2,13 +2,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const router = require('./routes');
-const router = require('express').Router();
+const router = require('./routes');
+// const router = require('express').Router();
 const { errors } = require('celebrate');
 // const {createUser, login} = require('./controllers/users');
 // console.log(createUser);
 // const errorHandler = require('./middlewares/errorHandler')
-// app.use(router);
+app.use(router);
 app.use(bodyParser.json());
 // router.post('/signup', createUser);
 // router.post('/signin', login);

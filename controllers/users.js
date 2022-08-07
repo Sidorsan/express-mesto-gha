@@ -9,6 +9,7 @@ const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
 const ValidationErrorCode = require('../errors/ValidationErrorCode');
+
 // console.log(new CastErrorCode('ewce'));
 // const {
 //   SERVER_ERROR_CODE,
@@ -24,6 +25,7 @@ const ValidationErrorCode = require('../errors/ValidationErrorCode');
 const SALT_ROUNDS = 10;
 
 module.exports.getUsers = (req, res, next) => {
+  console.log("User");
   return User.find({})
     .then((users) => res.send(users))
 
