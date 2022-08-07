@@ -7,7 +7,12 @@ const {
   updateUser,
   updateUserAvatar,
   getCurrentUser,
+  createUser,
+  login,
 } = require('../controllers/users');
+
+router.post('/signup', createUser);
+router.post('/signin', login);
 
 router.use(auth);
 
@@ -31,13 +36,15 @@ router.patch(
   }),
   updateUserAvatar
 );
-router.get('/users/me',
-  getCurrentUser);
+router.get('/users/me', getCurrentUser);
 
-router.get('/users/:id', celebrate({
-  params:  Joi.object().keys({
-    id: Joi.string().alphanum().length(24)
+router.get(
+  '/users/:id',
+  celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24),
+    }),
   }),
-
-}), getUser);
+  getUser
+);
 module.exports = router;

@@ -9,7 +9,7 @@ const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
 const ValidationErrorCode = require('../errors/ValidationErrorCode');
-console.log(new CastErrorCode('ewce'));
+// console.log(new CastErrorCode('ewce'));
 // const {
 //   SERVER_ERROR_CODE,
 //   VALIDATION_ERROR_CODE,
@@ -56,7 +56,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch(next);
 };
 
-const createUser = (req, res, next) => {
+module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
   if (!email || !password) {
     next(new ValidationErrorCode(err.message));
@@ -129,7 +129,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     });
 };
 
-const login = (req, res, next) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     next(new ValidationErrorCode(err.message));
@@ -158,4 +158,4 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports = { createUser, login };
+
