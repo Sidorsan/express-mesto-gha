@@ -1,9 +1,9 @@
 const Card = require('../models/card');
 
-// const CastErrorCode = require('../errors/CastErrorCode');
-// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-// const NotFoundError = require('../errors/NotFoundError');
-// const ValidationErrorCode = require('../errors/ValidationErrorCode');
+const CastErrorCode = require('../errors/CastErrorCode');
+const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
+const NotFoundError = require('../errors/NotFoundError');
+const ValidationErrorCode = require('../errors/ValidationErrorCode');
 
 // const {
 //   SERVER_ERROR_CODE,
@@ -28,8 +28,8 @@ module.exports.createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         console.log(err.message);
-        // next(new ValidationErrorCode(err.message));
-        // return;
+        next(new ValidationErrorCode(err.message));
+        return;
       }
       next();
     });
@@ -39,21 +39,21 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
     .then((card) => {
       if (!card) {
-        // next(new NotFoundError('Карточка не найдена'));
-        // return;
+        next(new NotFoundError('Карточка не найдена'));
+        return;
       }
       if (req.user._id != card.owner) {
-        // next(
-        //   new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
-        // );
-        // return;
+        next(
+          new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
+        );
+        return;
       }
       return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new CastErrorCode('Некорректный ID'));
-        // return;
+        next(new CastErrorCode('Некорректный ID'));
+        return;
       }
       next();
     });
@@ -67,15 +67,15 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        // next(new NotFoundError('Карточка не найдена'));
-        // return;
+        next(new NotFoundError('Карточка не найдена'));
+        return;
       }
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new CastErrorCode('Некорректный ID'));
-        // return;
+        next(new CastErrorCode('Некорректный ID'));
+        return;
       }
       next();
     });
@@ -89,15 +89,15 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        // next(new NotFoundError('Карточка не найдена'));
-        // return;
+        next(new NotFoundError('Карточка не найдена'));
+        return;
       }
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new CastErrorCode('Некорректный ID'));
-        // return;
+        next(new CastErrorCode('Некорректный ID'));
+        return;
       }
       next();
     });

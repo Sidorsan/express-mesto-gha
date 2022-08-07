@@ -4,12 +4,12 @@ const bcrypt = require('bcrypt');
 // const { getJwtToken } = require('../middlewares/auth');
 // const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
-// const CastErrorCode = require('../errors/CastErrorCode');
-// const ConflictErrorCode = require('../errors/ConflictErrorCode');
-// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-// const NotFoundError = require('../errors/NotFoundError');
-// const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
-// const ValidationErrorCode = require('../errors/ValidationErrorCode');
+const CastErrorCode = require('../errors/CastErrorCode');
+const ConflictErrorCode = require('../errors/ConflictErrorCode');
+const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
+const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
+const ValidationErrorCode = require('../errors/ValidationErrorCode');
 
 // const {
 //   SERVER_ERROR_CODE,
@@ -35,15 +35,15 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-        // next(new NotFoundError('Нет пользователя с таким id'));
-        // return;
+        next(new NotFoundError('Нет пользователя с таким id'));
+        return;
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // next(new CastErrorCode('Некорректный ID'));
-        // return;
+        next(new CastErrorCode('Некорректный ID'));
+        return;
       }
       next();
     });
@@ -60,13 +60,13 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { email, password, name, about, avatar } = req.body;
   if (!email || !password) {
-    // next(new ValidationErrorCode(err.message));
-    // return;
+    next(new ValidationErrorCode(err.message));
+    return;
   }
   User.findOne({ email }).then((user) => {
     if (user) {
-      // next(new ConflictErrorCode('Такой пользователь уже существует'));
-      // return;
+      next(new ConflictErrorCode('Такой пользователь уже существует'));
+      return;
     }
   });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
@@ -85,19 +85,19 @@ module.exports.updateUser = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        // next(new NotFoundError('Нет пользователя с таким id'));
-        // return;
+        next(new NotFoundError('Нет пользователя с таким id'));
+        return;
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        // next(new ValidationErrorCode(err.message));
-        // return;
+        next(new ValidationErrorCode(err.message));
+        return;
       }
       if (err.name === 'CastError') {
-        // next(new CastErrorCode('Некорректный ID'));
-        // return;
+        next(new CastErrorCode('Некорректный ID'));
+        return;
       }
       next();
     });
@@ -112,19 +112,19 @@ module.exports.updateUserAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        // next(new NotFoundError('Нет пользователя с таким id'));
-        // return;
+        next(new NotFoundError('Нет пользователя с таким id'));
+        return;
       }
       res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        // next(new ValidationErrorCode(err.message));
-        // return;
+        next(new ValidationErrorCode(err.message));
+        return;
       }
       if (err.name === 'CastError') {
-        // next(new CastErrorCode('Некорректный ID'));
-        // return;
+        next(new CastErrorCode('Некорректный ID'));
+        return;
       }
       next();
     });
@@ -133,20 +133,20 @@ module.exports.updateUserAvatar = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    // next(new ValidationErrorCode(err.message));
-    // return;
+    next(new ValidationErrorCode(err.message));
+    return;
   }
   User.findOne({ email })
     .select('+password')
     .then((user) => {
       if (!user) {
-        // next(new ForbiddenErrorCode('Такого пользователя не существует'));
-        // return;
+        next(new ForbiddenErrorCode('Такого пользователя не существует'));
+        return;
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
-          // next(new UnauthorizedErrorCode('Пароль не верный'));
-          // return;
+          next(new UnauthorizedErrorCode('Пароль не верный'));
+          return;
         }
 
         const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
