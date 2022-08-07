@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // const { getJwtToken } = require('../middlewares/auth');
 // const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
-const CastErrorCode = require('../errors/CastErrorCode');
+const sastErrorCode = require('../errors/sastErrorCode');
 const ConflictErrorCode = require('../errors/ConflictErrorCode');
 const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
 const NotFoundError = require('../errors/NotFoundError');
@@ -55,7 +55,7 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new CastErrorCode('Некорректный ID'));
+        next(new sastErrorCode('Некорректный ID'));
         return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
@@ -83,7 +83,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     }).catch(next)
     // .catch((err) => {
     //   if (err.name === 'CastError') {
-    //     next(new CastErrorCode('Некорректный ID'));
+    //     next(new sastErrorCode('Некорректный ID'));
     //     return;
     //     // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
     //   }
@@ -138,7 +138,7 @@ module.exports.updateUser = (req, res, next) => {
         // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
       }
       if (err.name === 'CastError') {
-        next(new CastErrorCode('Некорректный ID'));
+        next(new sastErrorCode('Некорректный ID'));
         return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
@@ -172,7 +172,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
         // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
       }
       if (err.name === 'CastError') {
-        next(new CastErrorCode('Некорректный ID'));
+        next(new sastErrorCode('Некорректный ID'));
         return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
