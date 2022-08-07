@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // const { getJwtToken } = require('../middlewares/auth');
 // const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
-const sastErrorCode = require('../errors/sastErrorCode');
+// const sastErrorCode = require('../errors/sastErrorCode'); вернуть
 const ConflictErrorCode = require('../errors/ConflictErrorCode');
 const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
 const NotFoundError = require('../errors/NotFoundError');
@@ -55,8 +55,8 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new sastErrorCode('Некорректный ID'));
-        return;
+        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
@@ -138,8 +138,8 @@ module.exports.updateUser = (req, res, next) => {
         // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
       }
       if (err.name === 'CastError') {
-        next(new sastErrorCode('Некорректный ID'));
-        return;
+        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
@@ -172,8 +172,8 @@ module.exports.updateUserAvatar = (req, res, next) => {
         // return res.status(VALIDATION_ERROR_CODE).send({ message: err.message });
       }
       if (err.name === 'CastError') {
-        next(new sastErrorCode('Некорректный ID'));
-        return;
+        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();

@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 
-const sastErrorCode = require('../errors/sastErrorCode');
+// const sastErrorCode = require('../errors/sastErrorCode');
 const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationErrorCode = require('../errors/ValidationErrorCode');
@@ -66,8 +66,8 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new sastErrorCode('Некорректный ID'));
-        return;
+        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
@@ -96,8 +96,8 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new sastErrorCode('Некорректный ID'));
-        return;
+        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
@@ -126,8 +126,8 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new sastErrorCode('Некорректный ID'));
-        return;
+        // next(new sastErrorCode('Некорректный ID')); вернуть
+        // return;
         // return res.status(CAST_ERROR_CODE).send({ message: 'Некорректный ID' });
       }
       next();
