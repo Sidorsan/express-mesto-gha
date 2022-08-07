@@ -25,7 +25,7 @@ const ValidationErrorCode = require('../errors/ValidationErrorCode');
 const SALT_ROUNDS = 10;
 
 module.exports.getUsers = (req, res, next) => {
-  console.log("User");
+
   return User.find({})
     .then((users) => res.send(users))
 
