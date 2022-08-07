@@ -10,7 +10,14 @@ const jwt = require('jsonwebtoken');
 // const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
 // const ValidationErrorCode = require('../errors/ValidationErrorCode');
 
-const {CastErrorCode, ConflictErrorCode, ForbiddenErrorCode, NotFoundError, UnauthorizedErrorCode, ValidationErrorCode} =require('../errors/errors')
+const {
+  CastErrorCode,
+  ConflictErrorCode,
+  ForbiddenErrorCode,
+  NotFoundError,
+  UnauthorizedErrorCode,
+  ValidationErrorCode,
+} = require('../error');
 
 // console.log(new CastErrorCode('ewce'));
 // const {
@@ -27,7 +34,6 @@ const {CastErrorCode, ConflictErrorCode, ForbiddenErrorCode, NotFoundError, Unau
 const SALT_ROUNDS = 10;
 
 module.exports.getUsers = (req, res, next) => {
-
   return User.find({})
     .then((users) => res.send(users))
 
@@ -161,5 +167,3 @@ module.exports.login = (req, res, next) => {
 
     .catch(next);
 };
-
-

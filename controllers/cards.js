@@ -11,7 +11,7 @@ const {
   NotFoundError,
   UnauthorizedErrorCode,
   ValidationErrorCode,
-} = require('../errors/errors');
+} = require('../error');
 // const {
 //   SERVER_ERROR_CODE,
 //   VALIDATION_ERROR_CODE,
