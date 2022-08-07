@@ -6,7 +6,7 @@ module.exports.CONFLICT_ERROR_CODE = 409;//
 module.exports.FORBIDDEN_ERROR_CODE = 403;
 module.exports.UNAUTHORIZED_ERROR_CODE = 401;
 
-const {CAST_ERROR_CODE}= require('./errors');
+// const {CAST_ERROR_CODE}= require('./errors');
  class CastErrorCode extends Error {
   constructor(message) {
     super(message);
@@ -15,7 +15,7 @@ const {CAST_ERROR_CODE}= require('./errors');
 }
 module.exports = CastErrorCode
 
-const {CONFLICT_ERROR_CODE }= require('./errors');
+// const {CONFLICT_ERROR_CODE }= require('./errors');
  class ConflictErrorCode extends Error {
   constructor(message) {
     super(message);
@@ -24,7 +24,7 @@ const {CONFLICT_ERROR_CODE }= require('./errors');
 }
 module.exports = ConflictErrorCode
 
-const {FORBIDDEN_ERROR_CODE }= require('./errors');
+// const {FORBIDDEN_ERROR_CODE }= require('./errors');
 module.exports = class ForbiddenErrorCode extends Error {
   constructor(message) {
     super(message);
@@ -32,7 +32,7 @@ module.exports = class ForbiddenErrorCode extends Error {
   }
 }
 
-const {NOT_FOUND_ERROR_CODE }= require('./errors');
+// const {NOT_FOUND_ERROR_CODE }= require('./errors');
 module.exports = class NotFoundError extends Error {
   constructor(message) {
     super(message);
@@ -40,7 +40,7 @@ module.exports = class NotFoundError extends Error {
   }
 }
 
-const {UNAUTHORIZED_ERROR_CODE }= require('./errors');
+// const {UNAUTHORIZED_ERROR_CODE }= require('./errors');
 module.exports = class UnauthorizedErrorCode extends Error {
   constructor(message) {
     super(message);
@@ -48,7 +48,7 @@ module.exports = class UnauthorizedErrorCode extends Error {
   }
 }
 
-const {VALIDATION_ERROR_CODE}= require('./errors');
+// const {VALIDATION_ERROR_CODE}= require('./errors');
 module.exports = class ValidationErrorCode extends Error {
   constructor(message) {
     super(message);
