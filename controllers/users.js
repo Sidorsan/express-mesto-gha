@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 // const ValidationErrorCode = require('../errors/ValidationErrorCode');
 
 const {
-  // CastErrorCode,
+  CastErrorCode,
   ConflictErrorCode,
   ForbiddenErrorCode,
   NotFoundError,
@@ -19,7 +19,8 @@ const {
   ValidationErrorCode,
 } = require('../error');
 
-const CastErrorCode = require('../errors/CastErrorCode')
+// console.log(ConflictErrorCode);
+// const CastErrorCode = require('../errors/CastErrorCode')
 // console.log(new CastErrorCode('ewce'));
 // const {
 //   SERVER_ERROR_CODE,
