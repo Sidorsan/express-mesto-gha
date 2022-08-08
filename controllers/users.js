@@ -89,7 +89,7 @@ module.exports.createUser = (req, res, next) => {
     User.create({ email, password: hash, name, about, avatar })
       .then((user) => res.status(201).send(user))
       .catch(() => next);
-  }).catch(() => next);;
+  })
 };
 
 
