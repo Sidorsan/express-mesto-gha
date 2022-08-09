@@ -21,8 +21,9 @@ router.post(
   createCard
 );
 router.delete('/cards/:id', deleteCard);
+
 router.put(
-  '/cards/:cardId/likes',
+  '/cards/:id/likes',
   celebrate({
     params: Joi.object().keys({
       id: Joi.string().alphanum().length(24),
@@ -31,7 +32,7 @@ router.put(
   likeCard
 );
 router.delete(
-  '/cards/:cardId/likes',
+  '/cards/:id/likes',
   celebrate({
     params: Joi.object().keys({
       id: Joi.string().alphanum().length(24),
