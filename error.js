@@ -7,7 +7,7 @@ const FORBIDDEN_ERROR_CODE = 403;
 const UNAUTHORIZED_ERROR_CODE = 401;
 
 // const CAST_ERROR_CODE = 400
-// module.exports = {CAST_ERROR_CODE}
+
 
 // const {CAST_ERROR_CODE}= require('./errors');
 class CastErrorCode extends Error {
@@ -65,4 +65,5 @@ module.exports = {
   NotFoundError,
   UnauthorizedErrorCode,
   ValidationErrorCode,
+
 };
