@@ -24,11 +24,11 @@ router.delete('/cards/:id', deleteCard);
 
 router.put(
   '/cards/:id/likes',
-  celebrate({
-    params: Joi.object().keys({
-      id: Joi.string().alphanum().length(24),
-    }),
-  }),
+  // celebrate({
+  //   params: Joi.object().keys({
+  //     id: Joi.string().alphanum().length(24),
+  //   }),
+  // }),
   likeCard
 );
 router.delete(

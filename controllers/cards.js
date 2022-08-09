@@ -70,9 +70,10 @@ module.exports.deleteCard = (req, res, next) => {
 
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
-    req.params.cardId,
+    req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
+
   )
     .then((card) => {
       if (!card) {
