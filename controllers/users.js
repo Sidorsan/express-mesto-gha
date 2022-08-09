@@ -85,7 +85,7 @@ module.exports.createUser = (req, res, next) => {
     User.create({ email, password: hash, name, about, avatar })
       .then((userData) =>
         res
-          .status(200||201)
+          .status(201)
           .send({
             email: userData.email,
             id: userData._id,
@@ -162,7 +162,7 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        next(new ForbiddenErrorCode('Такого пользователя не существует'));
+        next(new UnauthorizedErrorCode('Такого пользователя не существует'));
         return;
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
