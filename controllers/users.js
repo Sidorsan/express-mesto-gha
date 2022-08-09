@@ -84,15 +84,13 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
     User.create({ email, password: hash, name, about, avatar })
       .then((userData) =>
-        res
-          .status(201)
-          .send({
-            email: userData.email,
-            id: userData._id,
-            name: userData.name,
-            about: userData.about,
-            avatar: userData.avatar,
-          })
+        res.status(201).send({
+          email: userData.email,
+          id: userData._id,
+          name: userData.name,
+          about: userData.about,
+          avatar: userData.avatar,
+        })
       )
       .catch(() => next);
   });
@@ -174,7 +172,7 @@ module.exports.login = (req, res, next) => {
         const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
           expiresIn: '7d',
         });
-        return res.status(200).send(token);
+        return res.status(200).send({ token: token });
       });
     })
 
