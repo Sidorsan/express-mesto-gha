@@ -9,7 +9,7 @@
       }
     ],
     "max-classes-per-file": ["error", 6],
-   " eslint no-undef": "err"
+  //  " eslint no-undef": "err"
     // "eslint eqeqeq": ["error", "smart"]
   }
 }

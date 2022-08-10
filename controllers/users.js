@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+const err = {};
 const {
   CastErrorCode,
   ConflictErrorCode,
@@ -45,7 +46,9 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
   if (!email || !password) {
     next(new ValidationErrorCode(err.message));
@@ -57,7 +60,9 @@ module.exports.createUser = (req, res, next) => {
     }
   });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
-    User.create({ email, password: hash, name, about, avatar })
+    User.create({
+      email, password: hash, name, about, avatar,
+    })
       .then((userData) => res.status(201).send({
         email: userData.email,
         id: userData._id,
@@ -142,10 +147,10 @@ module.exports.login = (req, res, next) => {
           return;
         }
 
-        const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        const tok = jwt.sign({ _id: user._id }, 'some-secret-key', {
           expiresIn: '7d',
         });
-        return res.status(200).send({ token: token });
+        res.status(200).send({ token: tok });
       });
     })
 
