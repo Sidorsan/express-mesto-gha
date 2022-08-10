@@ -1,28 +1,10 @@
 const jwt = require('jsonwebtoken');
-// const JWT_SECRET = 'secret';
-// const User = require('../models/user');
-
-// module.exports.getJwtToken = (user) => {
-//   return jwt.sign({ _id: user._id }, 'some-secret-key',  { expiresIn: '7d'});
-// };
-
-// module.exports.isAuthorised = (token) => {
-//   return jwt.verify(token, JWT_SECRET, (err, decoded) => {
-//     if (err) return false
-//     return User.findById(decoded.id)
-//     .then((admin) => {
-//       return Boolean(admin)
-//     })
-//   })
-// }
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
+    res.status(401).send({ message: 'Необходима авторизация' });
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -31,13 +13,10 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
+    res.status(401).send({ message: 'Необходима авторизация' });
   }
 
   req.user = payload;
 
   next();
 };
-
