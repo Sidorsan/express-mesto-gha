@@ -1,15 +1,9 @@
 const Card = require('../models/card');
 
-// const CastErrorCode = require('../errors/CastErrorCode');
-// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-// const NotFoundError = require('../errors/NotFoundError');
-// const ValidationErrorCode = require('../errors/ValidationErrorCode');
 const {
   CastErrorCode,
-  ConflictErrorCode,
   ForbiddenErrorCode,
   NotFoundError,
-  UnauthorizedErrorCode,
   ValidationErrorCode,
 } = require('../error');
 // const {
@@ -27,7 +21,6 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.createCard = (req, res, next) => {
-
   const { name, link } = req.body;
 
   const owner = req.user._id;
@@ -51,13 +44,13 @@ module.exports.deleteCard = (req, res, next) => {
         next(new NotFoundError('Карточка не найдена'));
         return;
       }
-      if (req.user._id != card.owner) {
+      if (req.user._id !== card.owner) {
         next(
           new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
         );
         return;
       }
-      return Card.deleteOne(card).then(() => res.status(200).send(card));
+      Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -73,7 +66,6 @@ module.exports.likeCard = (req, res, next) => {
     req.params.id,
     { $addToSet: { likes: req.user._id } },
     { new: true },
-
   )
     .then((card) => {
       if (!card) {
@@ -95,7 +87,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
