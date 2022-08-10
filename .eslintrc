@@ -9,5 +9,6 @@
       }
     ],
     "max-classes-per-file": ["error", 6]
+    // "eslint eqeqeq": ["error", "smart"]
   }
 }
