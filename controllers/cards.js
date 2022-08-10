@@ -50,8 +50,7 @@ module.exports.deleteCard = (req, res, next) => {
         );
         return;
       }
-      Card.deleteOne(card).then(() => res.status(200).send(card));
-      return;
+      return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
