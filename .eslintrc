@@ -8,7 +8,8 @@
         "allow": ["_id"]
       }
     ],
-    "max-classes-per-file": ["error", 6]
+    "max-classes-per-file": ["error", 6],
+   " eslint no-undef": "err"
     // "eslint eqeqeq": ["error", "smart"]
   }
 }
