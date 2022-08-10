@@ -36,13 +36,12 @@ module.exports.deleteCard = (req, res, next) => {
         next(new NotFoundError('Карточка не найдена'));
         return;
       }
-      if (req.user._id != card.owner) {
-        next(
-          new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
-        );
-        return;
+      if (req.user._id === card.owner) {
+        Card.deleteOne(card).then(() => res.status(200).send(card));
       }
-      Card.deleteOne(card).then(() => res.status(200).send(card));
+      next(
+        new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
+      );
     })
     .catch((err) => {
       if (err.name === 'CastError') {
