@@ -10,7 +10,9 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 router.use(auth);
+
 router.get('/cards', getCards);
+
 router.post(
   '/cards',
   celebrate({
@@ -21,7 +23,16 @@ router.post(
   }),
   createCard
 );
-router.delete('/cards/:id', deleteCard);
+
+router.delete(
+  '/cards/:id',
+  celebrate({
+    params: Joi.object().keys({
+      id: Joi.string().alphanum().length(24),
+    }),
+  }),
+  deleteCard
+);
 
 router.put(
   '/cards/:id/likes',
