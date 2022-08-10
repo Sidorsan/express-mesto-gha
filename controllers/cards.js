@@ -6,13 +6,6 @@ const {
   NotFoundError,
   ValidationErrorCode,
 } = require('../error');
-// const {
-//   SERVER_ERROR_CODE,
-//   VALIDATION_ERROR_CODE,
-//   CAST_ERROR_CODE,
-//   NOT_FOUND_ERROR_CODE,
-//   FORBIDDEN_ERROR_CODE,
-// } = require('../errors/errors');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -29,7 +22,6 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        console.log(err.message);
         next(new ValidationErrorCode(err.message));
         return;
       }
@@ -50,7 +42,7 @@ module.exports.deleteCard = (req, res, next) => {
         );
         return;
       }
-      return  Card.deleteOne(card).then(() => res.status(200).send(card));
+      Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -65,7 +57,7 @@ module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
@@ -87,7 +79,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
