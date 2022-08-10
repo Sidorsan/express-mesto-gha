@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const regex = /^(https||http):\/\/(www\.)?([\w+\-._~:/?#[\]@!$&'()*+,;=])+$/;
-
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -27,15 +25,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'Жак-Ив Кусто',
       required: true,
-      // minlength: 2,
-      // maxlength: 30,
     },
     about: {
       type: String,
       default: 'Исследователь',
       required: true,
-      // minlength: 2,
-      // maxlength: 30,
     },
     avatar: {
       type: String,
@@ -44,7 +38,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 module.exports = mongoose.model('user', userSchema);
