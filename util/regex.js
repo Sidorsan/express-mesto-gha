@@ -1,2 +1,2 @@
-const regex = /^(https||http):\/\/(www\.)?([\w+\-._~:/?#[\]@!$&'()*+,;=])+$/;
-module.exports = regex;
+const regexUrlCheck = /^(https||http):\/\/(www\.)?([\w+\-._~:/?#[\]@!$&'()*+,;=])+$/;
+module.exports = regexUrlCheck;

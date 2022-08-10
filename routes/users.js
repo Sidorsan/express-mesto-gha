@@ -2,7 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
 const auth = require('../middlewares/auth');
 
-const regex = require('../util/regex');
+const regexUrlCheck = require('../util/regex');
 
 
 const {
@@ -34,7 +34,7 @@ router.post(
       password: Joi.string().required().min(2).max(30),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().required().pattern(regex),
+      avatar: Joi.string().pattern(regexUrlCheck),
     }),
   }),
   createUser
@@ -59,7 +59,7 @@ router.patch(
   '/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string().required().pattern(regex)
+      avatar: Joi.string().required().pattern(regexUrlCheck)
     }),
   }),
   updateUserAvatar
