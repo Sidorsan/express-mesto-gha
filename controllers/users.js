@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+
 const {
   CastErrorCode,
   ConflictErrorCode,
@@ -44,7 +45,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createUser = (err, req, res, next) => {
+module.exports.createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
   } = req.body;
@@ -127,7 +128,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     });
 };
 
-module.exports.login = (err, req, res, next) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     next(new ValidationErrorCode(err.message));
@@ -140,7 +141,7 @@ module.exports.login = (err, req, res, next) => {
         next(new UnauthorizedErrorCode('Такого пользователя не существует'));
         return;
       }
-      bcrypt.compare(password, user.password, (isValidPassword) => {
+      bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
           next(new UnauthorizedErrorCode('Пароль не верный'));
           return;
