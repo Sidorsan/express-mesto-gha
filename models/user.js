@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-// const regex =(/^(https||http):\/\//)?([\w+\-._~:/?#[\]@!$&'()*+,;=])+$/
+// function validateUrl (val) {
+//   const regex = /^(https||http):\/\/(www\.)?([\w+\-._~:/?#[\]@!$&'()*+,;=])+$/;
+//   return val === regex;
+// }
+
+const exampleRegExp = new RegExp('/^(https||http):\/\/(www\.)?([\w+\-._~:/?#[\]@!$&'()*+,;=])+$/');
+
 const userSchema = new mongoose.Schema(
   {
     email: {
