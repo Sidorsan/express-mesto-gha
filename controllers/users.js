@@ -1,44 +1,20 @@
-const User = require('../models/user');
-const bcrypt = require('bcrypt');
-// const { getJwtToken } = require('../middlewares/auth');
-// const { isAuthorised } = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
-// const CastErrorCode = require('../errors/CastErrorCode');
-// const ConflictErrorCode = require('../errors/ConflictErrorCode');
-// const ForbiddenErrorCode = require('../errors/ForbiddenErrorCode');
-// const NotFoundError = require('../errors/NotFoundError');
-// const UnauthorizedErrorCode = require('../errors/UnauthorizedErrorCode');
-// const ValidationErrorCode = require('../errors/ValidationErrorCode');
+const bcrypt = require('bcrypt');
+const User = require('../models/user');
 
 const {
   CastErrorCode,
   ConflictErrorCode,
-  ForbiddenErrorCode,
   NotFoundError,
   UnauthorizedErrorCode,
   ValidationErrorCode,
 } = require('../error');
 
-// console.log(ConflictErrorCode);
-// const CastErrorCode = require('../errors/CastErrorCode')
-// console.log(new CastErrorCode('ewce'));
-// const {
-//   SERVER_ERROR_CODE,
-//   VALIDATION_ERROR_CODE,
-//   CAST_ERROR_CODE,
-//   NOT_FOUND_ERROR_CODE,
-//   CONFLICT_ERROR_CODE,
-//   FORBIDDEN_ERROR_CODE,
-//   UNAUTHORIZED_ERROR_CODE,
-// } = require('../errors/errors');
-// const { log } = require('console');
-// const user = require('../models/user');
 const SALT_ROUNDS = 10;
 
 module.exports.getUsers = (req, res, next) => {
-  return User.find({})
+  User.find({})
     .then((users) => res.send(users))
-
     .catch(next);
 };
 
@@ -68,8 +44,10 @@ module.exports.getCurrentUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createUser = (req, res, next) => {
-  const { email, password, name, about, avatar } = req.body;
+module.exports.createUser = (err, req, res, next) => {
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
   if (!email || !password) {
     next(new ValidationErrorCode(err.message));
@@ -78,20 +56,19 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email }).then((user) => {
     if (user) {
       next(new ConflictErrorCode('Такой пользователь уже существует'));
-      return;
     }
   });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
-    User.create({ email, password: hash, name, about, avatar })
-      .then((userData) =>
-        res.status(201).send({
-          email: userData.email,
-          id: userData._id,
-          name: userData.name,
-          about: userData.about,
-          avatar: userData.avatar,
-        })
-      )
+    User.create({
+      email, password: hash, name, about, avatar,
+    })
+      .then((userData) => res.status(201).send({
+        email: userData.email,
+        id: userData._id,
+        name: userData.name,
+        about: userData.about,
+        avatar: userData.avatar,
+      }))
       .catch(() => next);
   });
 };
@@ -101,7 +78,7 @@ module.exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (!user) {
@@ -128,7 +105,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (!user) {
@@ -150,7 +127,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     });
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = (err, req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     next(new ValidationErrorCode(err.message));
@@ -163,16 +140,16 @@ module.exports.login = (req, res, next) => {
         next(new UnauthorizedErrorCode('Такого пользователя не существует'));
         return;
       }
-      bcrypt.compare(password, user.password, (err, isValidPassword) => {
+      bcrypt.compare(password, user.password, (isValidPassword) => {
         if (!isValidPassword) {
           next(new UnauthorizedErrorCode('Пароль не верный'));
           return;
         }
 
-        const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        const tok = jwt.sign({ _id: user._id }, 'some-secret-key', {
           expiresIn: '7d',
         });
-        return res.status(200).send({ token: token });
+        res.status(200).send({ token: tok });
       });
     })
 

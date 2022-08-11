@@ -1,6 +1,9 @@
+const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
 const auth = require('../middlewares/auth');
-const { celebrate, Joi } = require('celebrate');
+
+const regexUrlCheck = require('../util/regex');
+
 const {
   getUsers,
   getUser,
@@ -19,7 +22,7 @@ router.post(
       password: Joi.string().required().min(2).max(30),
     }),
   }),
-  login
+  login,
 );
 
 router.post(
@@ -30,10 +33,10 @@ router.post(
       password: Joi.string().required().min(2).max(30),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().min(2).max(30),
+      avatar: Joi.string().pattern(regexUrlCheck),
     }),
   }),
-  createUser
+  createUser,
 );
 
 router.use(auth);
@@ -48,17 +51,17 @@ router.patch(
       about: Joi.string().required().min(2).max(30),
     }),
   }),
-  updateUser
+  updateUser,
 );
 
 router.patch(
   '/users/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string().required().min(2).max(30),
+      avatar: Joi.string().required().pattern(regexUrlCheck),
     }),
   }),
-  updateUserAvatar
+  updateUserAvatar,
 );
 
 router.get('/users/me', getCurrentUser);
@@ -70,6 +73,6 @@ router.get(
       id: Joi.string().alphanum().length(24),
     }),
   }),
-  getUser
+  getUser,
 );
 module.exports = router;
