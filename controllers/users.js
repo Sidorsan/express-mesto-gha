@@ -146,10 +146,10 @@ module.exports.login = (req, res, next) => {
           return;
         }
 
-        const tok = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        const tokenUser = jwt.sign({ _id: user._id }, 'some-secret-key', {
           expiresIn: '7d',
         });
-        res.status(200).send({ token: tok });
+        res.status(200).send({ token: tokenUser });
       });
     })
 
