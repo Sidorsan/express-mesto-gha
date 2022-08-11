@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-
 const {
   CastErrorCode,
   ConflictErrorCode,
@@ -51,7 +50,7 @@ module.exports.createUser = (req, res, next) => {
   } = req.body;
 
   if (!email || !password) {
-    next(new ValidationErrorCode(err.message));
+    next(new ValidationErrorCode((err) => err.message));
     return;
   }
   User.findOne({ email }).then((user) => {
@@ -131,7 +130,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next(new ValidationErrorCode(err.message));
+    next(new ValidationErrorCode((err) => err.message));
     return;
   }
   User.findOne({ email })
