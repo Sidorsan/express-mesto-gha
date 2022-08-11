@@ -5,7 +5,7 @@ const {
   ForbiddenErrorCode,
   NotFoundError,
   ValidationErrorCode,
-} = require('../error');
+} = require('../errors');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
