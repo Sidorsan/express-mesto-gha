@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
         next(new ValidationErrorCode(err.message));
         return;
       }
-      next();
+      next(err);
     });
 };
 
@@ -40,14 +40,14 @@ module.exports.deleteCard = (req, res, next) => {
         next(new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя'));
         return;
       }
-      Card.deleteOne(card).then(() => res.status(200).send(card));
+      return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastErrorCode('Некорректный ID'));
         return;
       }
-      next();
+      next(err);
     });
 };
 
