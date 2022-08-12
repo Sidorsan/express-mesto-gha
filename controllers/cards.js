@@ -5,7 +5,7 @@ const {
   ForbiddenErrorCode,
   NotFoundError,
   ValidationErrorCode,
-} = require('../error');
+} = require('../errors');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
         next(new ValidationErrorCode(err.message));
         return;
       }
-      next();
+      next(err);
     });
 };
 
@@ -36,18 +36,21 @@ module.exports.deleteCard = (req, res, next) => {
         next(new NotFoundError('Карточка не найдена'));
         return;
       }
-      if (req.user._id != card.owner) {
-        next(new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя'));
+
+      if (req.user._id.toString() !== card.owner.toString()) {
+        next(
+          new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
+        );
         return;
       }
-      Card.deleteOne(card).then(() => res.status(200).send(card));
+      return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastErrorCode('Некорректный ID'));
         return;
       }
-      next();
+      next(err);
     });
 };
 
@@ -55,7 +58,7 @@ module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {
@@ -77,7 +80,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true },
+    { new: true }
   )
     .then((card) => {
       if (!card) {

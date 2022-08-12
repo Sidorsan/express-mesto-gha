@@ -9,6 +9,7 @@ const {
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
+
 router.use(auth);
 
 router.get('/cards', getCards);

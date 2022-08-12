@@ -2,14 +2,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-const err = {};
 const {
   CastErrorCode,
   ConflictErrorCode,
   NotFoundError,
   UnauthorizedErrorCode,
   ValidationErrorCode,
-} = require('../error');
+} = require('../errors');
 
 const SALT_ROUNDS = 10;
 
@@ -26,14 +25,14 @@ module.exports.getUser = (req, res, next) => {
         next(new NotFoundError('Нет пользователя с таким id'));
         return;
       }
-      res.status(200).send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastErrorCode('Некорректный ID'));
         return;
       }
-      next();
+      next(err);
     });
 };
 
@@ -50,10 +49,6 @@ module.exports.createUser = (req, res, next) => {
     email, password, name, about, avatar,
   } = req.body;
 
-  if (!email || !password) {
-    next(new ValidationErrorCode(err.message));
-    return;
-  }
   User.findOne({ email }).then((user) => {
     if (user) {
       next(new ConflictErrorCode('Такой пользователь уже существует'));
@@ -61,7 +56,11 @@ module.exports.createUser = (req, res, next) => {
   });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
     User.create({
-      email, password: hash, name, about, avatar,
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
     })
       .then((userData) => res.status(201).send({
         email: userData.email,
@@ -70,7 +69,15 @@ module.exports.createUser = (req, res, next) => {
         about: userData.about,
         avatar: userData.avatar,
       }))
-      .catch(() => next);
+      .catch((err) => {
+        if ((err.code === 11000)) {
+          next(new ConflictErrorCode('Пользователь с данным email уже существует'));
+        } else if (err.name === 'ValidationError') {
+          next(new ValidationErrorCode(err.message));
+        } else {
+          next(err);
+        }
+      });
   });
 };
 
@@ -97,7 +104,7 @@ module.exports.updateUser = (req, res, next) => {
         next(new CastErrorCode('Некорректный ID'));
         return;
       }
-      next();
+      next(err);
     });
 };
 
@@ -124,16 +131,16 @@ module.exports.updateUserAvatar = (req, res, next) => {
         next(new CastErrorCode('Некорректный ID'));
         return;
       }
-      next();
+      next(err);
     });
 };
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    next(new ValidationErrorCode(err.message));
-    return;
-  }
+  // if (!email || !password) {
+  //   next(new ValidationErrorCode((err) => err.message));
+  //   return;
+  // }
   User.findOne({ email })
     .select('+password')
     .then((user) => {
@@ -147,10 +154,10 @@ module.exports.login = (req, res, next) => {
           return;
         }
 
-        const tok = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        const tokenUser = jwt.sign({ _id: user._id }, 'some-secret-key', {
           expiresIn: '7d',
         });
-        res.status(200).send({ token: tok });
+        res.status(200).send({ token: tokenUser });
       });
     })
 
