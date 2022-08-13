@@ -1,4 +1,4 @@
-const VALIDATION_ERROR_CODE = require('./errorsCode');
+const { VALIDATION_ERROR_CODE } = require('./errorsCode');
 
 class ValidationErrorCode extends Error {
   constructor(message) {
