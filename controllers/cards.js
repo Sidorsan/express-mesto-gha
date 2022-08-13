@@ -1,11 +1,15 @@
 const Card = require('../models/card');
+const { CastErrorCode } = require('../errors/CastErrorCode');
+const { ForbiddenErrorCode } = require('../errors/ForbiddenErrorCode');
+const { NotFoundError } = require('../errors/NotFoundError');
+const { ValidationErrorCode } = require('../errors/ValidationErrorCode');
 
-const {
-  CastErrorCode,
-  ForbiddenErrorCode,
-  NotFoundError,
-  ValidationErrorCode,
-} = require('../errors/errors');
+// const {
+//   CastErrorCode,
+//   ForbiddenErrorCode,
+//   NotFoundError,
+//   ValidationErrorCode,
+// } = require('../errors/errorsCode');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})

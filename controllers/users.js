@@ -1,14 +1,19 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const { CastErrorCode } = require('../errors/CastErrorCode');
+const { NotFoundError } = require('../errors/NotFoundError');
+const { ValidationErrorCode } = require('../errors/ValidationErrorCode');
+const { ConflictErrorCode } = require('../errors/ConflictErrorCode');
+const { UnauthorizedErrorCode } = require('../errors/UnauthorizedErrorCode');
 
-const {
-  CastErrorCode,
-  ConflictErrorCode,
-  NotFoundError,
-  UnauthorizedErrorCode,
-  ValidationErrorCode,
-} = require('../errors/errors');
+// const {
+//   CastErrorCode,
+//   ConflictErrorCode,
+//   NotFoundError,
+//   UnauthorizedErrorCode,
+//   ValidationErrorCode,
+// } = require('../errors/errorsCode');
 
 const SALT_ROUNDS = 10;
 
@@ -137,10 +142,6 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  // if (!email || !password) {
-  //   next(new ValidationErrorCode((err) => err.message));
-  //   return;
-  // }
   User.findOne({ email })
     .select('+password')
     .then((user) => {
