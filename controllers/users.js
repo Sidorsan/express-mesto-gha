@@ -8,7 +8,7 @@ const {
   NotFoundError,
   UnauthorizedErrorCode,
   ValidationErrorCode,
-} = require('../errors');
+} = require('../errors/errors');
 
 const SALT_ROUNDS = 10;
 

@@ -5,7 +5,7 @@ const {
   ForbiddenErrorCode,
   NotFoundError,
   ValidationErrorCode,
-} = require('../errors');
+} = require('../errors/errors');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -38,8 +38,7 @@ module.exports.deleteCard = (req, res, next) => {
 
       if (req.user._id.toString() !== card.owner.toString()) {
         return next(
-          new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя')
-        );
+          new ForbiddenErrorCode('Нельзя удалить карточку другого пользователя'));
       }
       return Card.deleteOne(card).then(() => res.status(200).send(card));
     })
@@ -56,7 +55,7 @@ module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
@@ -78,7 +77,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
