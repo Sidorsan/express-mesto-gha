@@ -69,7 +69,7 @@ module.exports.createUser = (req, res, next) => {
           next(err);
         }
       });
-  });
+  }).catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
