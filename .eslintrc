@@ -6,7 +6,6 @@
       {
         "allow": ["_id"]
       }
-    ],
-    // "max-classes-per-file": ["error", 6]
+    ]
   }
 }

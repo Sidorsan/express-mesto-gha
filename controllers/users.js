@@ -45,12 +45,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
   } = req.body;
-
-  // User.findOne({ email }).then((user) => {
-  //   if (user) {
-  //     next(new ConflictErrorCode('Такой пользователь уже существует'));
-  //   }
-  // });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
     User.create({
       email,
