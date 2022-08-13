@@ -7,14 +7,6 @@ const { ValidationErrorCode } = require('../errors/ValidationErrorCode');
 const { ConflictErrorCode } = require('../errors/ConflictErrorCode');
 const { UnauthorizedErrorCode } = require('../errors/UnauthorizedErrorCode');
 
-// const {
-//   CastErrorCode,
-//   ConflictErrorCode,
-//   NotFoundError,
-//   UnauthorizedErrorCode,
-//   ValidationErrorCode,
-// } = require('../errors/errorsCode');
-
 const SALT_ROUNDS = 10;
 
 module.exports.getUsers = (req, res, next) => {
@@ -54,11 +46,11 @@ module.exports.createUser = (req, res, next) => {
     email, password, name, about, avatar,
   } = req.body;
 
-  User.findOne({ email }).then((user) => {
-    if (user) {
-      next(new ConflictErrorCode('Такой пользователь уже существует'));
-    }
-  });
+  // User.findOne({ email }).then((user) => {
+  //   if (user) {
+  //     next(new ConflictErrorCode('Такой пользователь уже существует'));
+  //   }
+  // });
   bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
     User.create({
       email,
