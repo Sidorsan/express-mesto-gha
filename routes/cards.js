@@ -2,7 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
 const auth = require('../middlewares/auth');
 const regexUrlCheck = require('../util/regex');
-const { requestLogger, errorLogger } = require('../middlewares/logger');
+
 const {
   getCards,
   createCard,
