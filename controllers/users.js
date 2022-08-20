@@ -7,6 +7,7 @@ const { ValidationErrorCode } = require('../errors/ValidationErrorCode');
 const { ConflictErrorCode } = require('../errors/ConflictErrorCode');
 const { UnauthorizedErrorCode } = require('../errors/UnauthorizedErrorCode');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
 const SALT_ROUNDS = 10;
 
 module.exports.getUsers = (req, res, next) => {
@@ -141,7 +142,7 @@ module.exports.login = (req, res, next) => {
           return;
         }
 
-        const tokenUser = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        const tokenUser = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', {
           expiresIn: '7d',
         });
         res.status(200).send({ token: tokenUser });
