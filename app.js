@@ -11,7 +11,6 @@ const { errorHandler } = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { allowedCors } = require('./middlewares/cors');
 
-
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(requestLogger);
