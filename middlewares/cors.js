@@ -6,6 +6,7 @@ const allowedCors = [
   'http://sidorsan.nomoredomains.sbs',
   'https://api.sidorsan.nomoredomains.sbs',
   'http://api.sidorsan.nomoredomains.sbs',
+
 ];
 
 module.exports = { allowedCors };
