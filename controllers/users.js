@@ -142,7 +142,7 @@ module.exports.login = (req, res, next) => {
           return;
         }
 
-        const tokenUser = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET, {
+        const tokenUser = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', {
           expiresIn: '7d',
         });
         res.status(200).send({ token: tokenUser });
