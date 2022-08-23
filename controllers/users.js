@@ -46,31 +46,38 @@ module.exports.createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
   } = req.body;
-  bcrypt.hash(password, SALT_ROUNDS).then((hash) => {
-    User.create({
-      email,
-      password: hash,
-      name,
-      about,
-      avatar,
+  bcrypt
+    .hash(password, SALT_ROUNDS)
+    .then((hash) => {
+      User.create({
+        email,
+        password: hash,
+        name,
+        about,
+        avatar,
+      })
+        .then((userData) => res.status(201).send({
+          email: userData.email,
+          id: userData._id,
+          name: userData.name,
+          about: userData.about,
+          avatar: userData.avatar,
+        }))
+        .catch((err) => {
+          if (err.code === 11000) {
+            next(
+              new ConflictErrorCode(
+                'Пользователь с данным email уже существует',
+              ),
+            );
+          } else if (err.name === 'ValidationError') {
+            next(new ValidationErrorCode(err.message));
+          } else {
+            next(err);
+          }
+        });
     })
-      .then((userData) => res.status(201).send({
-        email: userData.email,
-        id: userData._id,
-        name: userData.name,
-        about: userData.about,
-        avatar: userData.avatar,
-      }))
-      .catch((err) => {
-        if ((err.code === 11000)) {
-          next(new ConflictErrorCode('Пользователь с данным email уже существует'));
-        } else if (err.name === 'ValidationError') {
-          next(new ValidationErrorCode(err.message));
-        } else {
-          next(err);
-        }
-      });
-  }).catch(next);
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -141,10 +148,14 @@ module.exports.login = (req, res, next) => {
           next(new UnauthorizedErrorCode('Пароль не верный'));
           return;
         }
-
-        const tokenUser = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', {
-          expiresIn: '7d',
-        });
+        console.log(NODE_ENV);
+        const tokenUser = jwt.sign(
+          { _id: user._id },
+          NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+          {
+            expiresIn: '7d',
+          },
+        );
         res.status(200).send({ token: tokenUser });
       });
     })
