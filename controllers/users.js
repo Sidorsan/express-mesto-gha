@@ -148,7 +148,6 @@ module.exports.login = (req, res, next) => {
           next(new UnauthorizedErrorCode('Пароль не верный'));
           return;
         }
-        console.log(NODE_ENV);
         const tokenUser = jwt.sign(
           { _id: user._id },
           NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
@@ -159,6 +158,5 @@ module.exports.login = (req, res, next) => {
         res.status(200).send({ token: tokenUser });
       });
     })
-
     .catch(next);
 };
